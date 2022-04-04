@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 1</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 900px;
+            margin: 0 auto;
+        }
+
+        .img-container {
+            padding: 20px;
+            margin-bottom: 10px;
+            border: 1px solid lightgray;
+            text-align: center;
+            width: auto;
+        }
+
+        .img-container p {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .img-container img {
+            width: 100%;
+        }
+
+        .menu {
+            list-style-type: none;
+            display: flex;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .menu li {
+            margin: 0 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="img-container">
+            <img src="./img/ping.png">
+            <p>ping -c 5 kubsu.ru</p>
+        </div>
+        <div class="img-container">
+            <img src="./img/nslookup.png">
+            <p>lookup -type=(mx/a) (kubsu/kubsu-dev).ru</p>
+        </div>
+        <div class="img-container">
+            <img src="./img/whois.png">
+            <p>whois (kubsu/kubsu-dev).ru</p>
+        </div>
+        <div class="img-container">
+            <img src="./img/filezilla.png">
+            <p>Filezilla</p>
+        </div>
+    </div>
+</body>
+
+</html>
