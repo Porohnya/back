@@ -56,19 +56,27 @@
             max-width: 150px;
             margin-bottom: 5px;
         }
+
+        .erros-block {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body>
-    <?php
-    if (!empty($messages)) {
-        print('<div id="messages">');
-        foreach ($messages as $message) {
-            print($message);
+    <div class="erros-block">
+        <?php
+        if (!empty($messages)) {
+            print('<div id="messages">');
+            foreach ($messages as $message) {
+                print($message);
+            }
+            print('</div>');
         }
-        print('</div>');
-    }
-    ?>
+        ?>
+    </div>
     <div class="form-container">
         <form method="POST" action="">
             <div class="block">
