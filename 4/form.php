@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
-    <title>Задание 3</title>
+    <title>Задание 4</title>
     <style>
         * {
             margin: 0;
@@ -48,6 +48,12 @@
             width: 100%;
             text-align: center;
         }
+
+        .error {
+            color: rgba(245, 46, 46, 1);
+            border: 1px solid rgba(245, 46, 46, 1);
+            box-shadow: 1px 2px 15px rgba(245, 46, 46, 0.5);
+        }
     </style>
 </head>
 
@@ -55,24 +61,24 @@
     <div class="form-container">
         <form method="POST" action="">
             <div class="block">
-                <input type="text" class="form-control" name="name" aria-describedby="basic-addon1" placeholder="Ваше имя..." />
+                <input type="text" class="form-control" name="name" placeholder="Ваше имя..." <?php if ($errors['name']) {print 'class="error"';} ?> value="<?php print $values['name']; ?>/>
             </div>
-            <div class="block">
-                <input type="text" class="form-control" name="email" aria-describedby="basic-addon2" placeholder="Ваш email..." />
+            <div class=" block">
+                <input type="text" class="form-control" name="email" placeholder="Ваш email..." <?php if ($errors['email']) {print 'class="error"';} ?> value="<?php print $values['email']; ?>" />
             </div>
             <div class="block" id="date-block">
                 <span class="block-title">Дата рождения</span>
-                <input type="date" class="form-control" aria-describedby="basic-addon3" name="date" />
+                <input type="date" class="form-control" name="date" <?php if ($errors['birth']) { print 'class="error"';} ?> value="<?php print $values['birth']; ?>/>
             </div>
-            <div class="block" id="gender-block">
+            <div class=" block" id="gender-block">
                 <span>Пол:</span>
                 <div class="radios">
-                    <div class="male-radio">
-                        <input class="form-check-input" type="radio" name="gender" value="m" />
+                    <div class="male-block">
+                        <input class="form-check-input" type="radio" name="gender" value="m" <?php if ($values['gender'] == 'm') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="male">Муж</label>
                     </div>
-                    <div class="female-radio">
-                        <input class="form-check-input" type="radio" name="gender" value="f" />
+                    <div class="female-block">
+                        <input class="form-check-input" type="radio" name="gender" value="f" <?php if ($values['gender'] == 'f') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="female">Жен</label>
                     </div>
                 </div>
@@ -81,44 +87,75 @@
                 <span class="block-title">Конечности:</span>
                 <div class="radios">
                     <div class="limbs-radio">
-                        <input class="form-check-input" type="radio" name="limbs" value="1" />
+                        <input class="form-check-input" type="radio" name="limbs" value="1" <?php if ($values['limbs'] == '1') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="male">1</label>
                     </div>
                     <div class="limbs-radio">
-                        <input class="form-check-input" type="radio" name="limbs" value="2" />
+                        <input class="form-check-input" type="radio" name="limbs" value="2" <?php if ($values['limbs'] == '2') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="female">2</label>
                     </div>
                     <div class="limbs-radio">
-                        <input class="form-check-input" type="radio" name="limbs" value="3" />
+                        <input class="form-check-input" type="radio" name="limbs" value="3" <?php if ($values['limbs'] == '3') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="female">3</label>
                     </div>
                     <div class="limbs-radio">
-                        <input class="form-check-input" type="radio" name="limbs" value="4" />
+                        <input class="form-check-input" type="radio" name="limbs" value="4" <?php if ($values['limbs'] == '4') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="female">4</label>
                     </div>
                     <div class="limbs-radio">
-                        <input class="form-check-input" type="radio" name="limbs" value="m" />
+                        <input class="form-check-input" type="radio" name="limbs" value="m" <?php if ($values['limbs'] == 'm') {print 'checked';}; ?>/>
                         <label class="form-check-label" for="female">>4</label>
                     </div>
                 </div>
             </div>
             <div class="block">
                 <span class="block-title">Ваши суперспособности</span>
-                <select class="form-select form-select-lg mb-2" name="select[]" multiple>
-                    <option value="time" selected>Остановка времени</option>
-                    <option value="through">Прохождение сквозь стены</option>
-                    <option value="inf">Бессмертие</option>
-                    <option value="psycho">Захват Разума</option>
+                <select class="form-select form-select-lg mb-2" name="powers[]" multiple <?php if ($errors['powers']) {print 'class="error"';} ?>>
+                    <option value="time" <?php $arr = explode(',', $values['powers']);
+                                        if ($arr != '') {
+                                            foreach ($arr as $value) {
+                                                if ($value == 'time') {
+                                                    print 'selected';
+                                                }
+                                            }
+                                        }
+                                        ?>>Остановка времени</option>
+                    <option value="through" <?php $arr = explode(',', $values['powers']);
+                                            if ($arr != '') {
+                                                foreach ($arr as $value) {
+                                                    if ($value == 'through') {
+                                                        print 'selected';
+                                                    }
+                                                }
+                                            } ?>>Прохождение сквозь стены</option>
+                    <option value="inf" <?php $arr = explode(',', $values['powers']);
+                                                if ($arr != '') {
+                                                    foreach ($arr as $value) {
+                                                        if ($value == 'inf') {
+                                                            print 'selected';
+                                                        }
+                                                    }
+                                                } ?>>Бессмертие</option>
+                    <option value="psycho" <?php $arr = explode(',', $values['powers']);
+                                                if ($arr != '') {
+                                                    foreach ($arr as $value) {
+                                                        if ($value == 'psycho') {
+                                                            print 'selected';
+                                                        }
+                                                    }
+                                                } ?>>Захват Разума</option>
                 </select>
             </div>
             <div class="block">
                 <span class="block-title">Биография</span>
-                <textarea class="form-control" placeholder="Расскажите о себе..." name="bio"></textarea>
+                <textarea class="form-control" placeholder="Расскажите о себе..." name="bio" <?php if ($errors['bio']) {print 'class="error"';} ?>>
+                    <?php print $values['bio']; ?>
+                </textarea>
             </div>
             <div class="form-check policy">
-                <input class="form-check-input" type="checkbox" value="y" id="policy" name="policy" />
+                <input class="form-check-input" type="checkbox" value="y" id="policy" name="policy" checked/>
                 <label class="form-check-label" for="policy">Согласен с
-                    <a href="./task3.html">политикой обработки персональных данных*</a>.</label>
+                    <a href="#">политикой обработки персональных данных*</a>.</label>
             </div>
             <div class="btn-container">
                 <button class="btn btn-primary" type="submit" id="send-btn">
