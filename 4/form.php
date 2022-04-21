@@ -58,6 +58,15 @@
 </head>
 
 <body>
+    <?php
+    if (!empty($messages)) {
+        print('<div id="messages">');
+        foreach ($messages as $message) {
+            print($message);
+        }
+        print('</div>');
+    }
+    ?>
     <div class="form-container">
         <form method="POST" action="">
             <div class="block">
@@ -68,7 +77,7 @@
             </div>
             <div class="block" id="date-block">
                 <span class="block-title">Дата рождения</span>
-                <input type="date" class="form-control" name="date" <?php if ($errors['date']) { print 'class="error"';} ?> value="<?php print $values['date']; ?>/>
+                <input type="date" class="form-control" name="date" <?php if ($errors['date']) { print 'class="error"';} ?> value="<?php print $values['date']; ?>"/>
             </div>
             <div class=" block" id="gender-block">
                 <span>Пол:</span>
