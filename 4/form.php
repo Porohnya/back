@@ -54,7 +54,7 @@
             box-shadow: 1px 2px 15px rgba(245, 46, 46, 0.5);
             background-color: #fff;
             max-width: 150px;
-            width: 60px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
