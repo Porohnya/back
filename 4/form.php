@@ -68,7 +68,7 @@
             </div>
             <div class="block" id="date-block">
                 <span class="block-title">Дата рождения</span>
-                <input type="date" class="form-control" name="date" <?php if ($errors['birth']) { print 'class="error"';} ?> value="<?php print $values['birth']; ?>/>
+                <input type="date" class="form-control" name="date" <?php if ($errors['date']) { print 'class="error"';} ?> value="<?php print $values['date']; ?>/>
             </div>
             <div class=" block" id="gender-block">
                 <span>Пол:</span>
