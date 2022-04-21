@@ -61,7 +61,7 @@
     <div class="form-container">
         <form method="POST" action="">
             <div class="block">
-                <input type="text" class="form-control" name="name" placeholder="Ваше имя..." <?php if ($errors['name']) {print 'class="error"';} ?> value="<?php print $values['name']; ?>/>
+                <input type="text" class="form-control" name="name" placeholder="Ваше имя..." <?php if ($errors['name']) {print 'class="error"';} ?> value="<?php print $values['name']; ?>"/>
             </div>
             <div class=" block">
                 <input type="text" class="form-control" name="email" placeholder="Ваш email..." <?php if ($errors['email']) {print 'class="error"';} ?> value="<?php print $values['email']; ?>" />
