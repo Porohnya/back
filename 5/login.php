@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         form {
             display: flex;
             flex-direction: column;
-            width: 150px;
-            margin: 50px auto;
-            padding: 15px;
+            width: 160px;
+            margin: 80px auto;
+            padding: 2px 3px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.4);
             box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4);
