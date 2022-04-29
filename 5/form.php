@@ -21,7 +21,7 @@
 
         .form-container {
             width: 400px;
-            margin-top 50px;
+            margin: 50px auto;
             padding: 15px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.4);
