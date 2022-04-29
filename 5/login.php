@@ -27,11 +27,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <meta charset="utf-8">
     <title>Авторизация</title>
     <style>
+        body {
+            background: linear-gradient(90deg, #2da3a1, #a0befc);
+        }
+      
         form {
             display: flex;
             flex-direction: column;
             width: 150px;
             margin: 50px auto;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4);
         }
 
         form div {
