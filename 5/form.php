@@ -14,11 +14,14 @@
 
         body {
             background: linear-gradient(90deg, #2da3a1, #a0befc);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
         }
 
         .form-container {
             width: 400px;
-            margin: 50px auto;
+            margin-top 50px;
             padding: 15px;
             border-radius: 5px;
             background-color: rgba(255, 255, 255, 0.4);
@@ -56,10 +59,8 @@
             margin-bottom: 5px;
         }
 
-        .erros-block {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .erros-block #messages div{
+            margin-bottom: 7px;
         }
     </style>
 </head>
