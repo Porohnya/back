@@ -127,6 +127,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
     <title>Админка</title>
     <style>
         body {
+            padding: 12px;
             display: flex;
             jalign-items: flex-start;
             justify-content: space-around;
