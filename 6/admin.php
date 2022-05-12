@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $name = $_POST['name'];
         $email = $_POST['email'];
-        $date = $_POST['birth'];
+        $date = $_POST['date'];
         $gender = $_POST['gender'];
         $limbs = $_POST['limbs'];
         $bio = $_POST['bio'];
