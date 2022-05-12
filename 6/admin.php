@@ -128,7 +128,8 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
     <style>
         body {
             display: flex;
-            justify-content: center;
+            jalign-items: flex-start;
+            justify-content: space-between;
             flex-direction: column;
         }
 
