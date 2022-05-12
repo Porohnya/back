@@ -40,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie('user_id', $member_id, time() + 12 * 30 * 24 * 60 * 60);
 
         $powers = $db->prepare("SELECT * FROM superpowers2 WHERE user_login = ?");
-        $powers->execute(array($member_id['login']));
+        $powers->execute(array($result['login']));
         $result = $powers->fetch(PDO::FETCH_ASSOC);
-        $values['select'] = $result['powers'];
+        $values['powers'] = $result['powers'];
     } else {
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $limbs = $_POST['limbs'];
         $bio = $_POST['bio'];
         $policy = $_POST['policy'];
-        $select = implode(',', $_POST['select']);
+        $select = implode(',', $_POST['powers']);
         $user = 'u47526';
         $pass = '3997705';
         $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
