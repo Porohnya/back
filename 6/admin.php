@@ -132,6 +132,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
             jalign-items: flex-start;
             justify-content: space-around;
             flex-direction: column;
+            background: #fff!important;
         }
 
         table {
