@@ -129,7 +129,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
         body {
             display: flex;
             jalign-items: flex-start;
-            justify-content: space-between;
+            justify-content: space-around;
             flex-direction: column;
         }
 
