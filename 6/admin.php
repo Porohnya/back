@@ -6,13 +6,13 @@ $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATT
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($_POST['delete'])) {
-        $stmt = $db->prepare("SELECT * FROM members WHERE login = ?");
+        $stmt = $db->prepare("SELECT * FROM members2 WHERE login = ?");
         $stmt->execute(array($_POST['delete']));
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($result)) {
             print('<p>Ошибка при удалении данных</p>');
         } else {
-            $stmt = $db->prepare("DELETE FROM members WHERE login = ?");
+            $stmt = $db->prepare("DELETE FROM members2 WHERE login = ?");
             $stmt->execute(array($_POST['delete']));
 
             $powers = $db->prepare("DELETE FROM superpowers2 where user_login = ?");
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $member_id = $_POST['edit'];
 
         $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-        $stmt = $db->prepare("SELECT * FROM members WHERE login = ?");
+        $stmt = $db->prepare("SELECT * FROM members2 WHERE login = ?");
         $stmt->execute(array($member_id));
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -59,13 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $member_id = $_COOKIE['user_id'];
 
         try {
-            $stmt = $db->prepare("SELECT login FROM members WHERE id = ?");
+            $stmt = $db->prepare("SELECT login FROM members2 WHERE id = ?");
             $stmt->execute(array($member_id));
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             setcookie('login_value', $result['login'], time() + 12 * 30 * 24 * 60 * 60);
 
-            $stmt = $db->prepare("UPDATE members SET name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ? WHERE login = ?");
+            $stmt = $db->prepare("UPDATE members2 SET name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ? WHERE login = ?");
             $stmt->execute(array($name, $email, $date, $gender, $limbs, $bio, $policy, $result['login']));
 
             $superpowers = $db->prepare("UPDATE superpowers2 SET powers = ? WHERE user_login = ? ");
@@ -103,7 +103,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
 
     print('Вы успешно авторизовались и видите защищенные паролем данные.');
 
-    $stmt = $db->prepare("SELECT * FROM members");
+    $stmt = $db->prepare("SELECT * FROM members2");
     $stmt->execute([]);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -123,9 +123,37 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
-    <title>Admin</title>
+    <title>Админка</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table td {
+            border: 2px solid #E3E6EC;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            font-size: 13px;
+            padding: 0px 8px;
+        }
+
+        table th {
+            font-size: 15px;
+            color: #fff;
+            background: linear-gradient(90deg, #2da3a1, #a0befc);
+            height: 30px;
+        }
+    </style>
 </head>
 
 <body>
