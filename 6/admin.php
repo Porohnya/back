@@ -171,7 +171,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
         } ?>
     </table>
 
-    <table class="table table-dark table-hover">
+    <table class="table table-hover">
         <tr>
             <th scope="col">Имя</th>
             <th scope="col">Email</th>
