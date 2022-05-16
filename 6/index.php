@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $pass = '3997705';
             $member = $_SESSION['login'];
             $db = new PDO('mysql:host=localhost;dbname=u47529', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-            $stmt = $db->prepare("select * FROM members2 WHERE login = ?");
+            $stmt = $db->prepare("SELECT * FROM members2 WHERE login = ?");
             $stmt->execute(array($member));
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             $values['name'] = $result['name'];
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $values['bio'] = $result['bio'];
             $values['policy'] = $result['policy'];
 
-            $powers = $db->prepare("select * FROM superpowers2 WHERE user_login = ?");
+            $powers = $db->prepare("SELECT distinct name from supermembers join superpowers3 pow on power_id = pow.id where member_id = ?");
             $powers->execute(array($member));
             $result = $powers->fetch(PDO::FETCH_ASSOC);
             $values['powers'] = $result['powers'];
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $limbs = $_POST['limbs'];
     $bio = $_POST['bio'];
     $policy = $_POST['policy'];
-    $powers = implode(',', $_POST['powers']);
+    $powers = $_POST['powers'];
     $member = $_SESSION['login'];
 
     $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
@@ -208,8 +208,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt = $db->prepare("UPDATE members2 SET name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ? WHERE login = ?");
             $stmt->execute(array($name, $email, $date, $gender, $limbs, $bio, $policy, $member));
 
-            $superpowers = $db->prepare("UPDATE superpowers2 SET powers = ? WHERE user_login = ? ");
-            $superpowers->execute(array($powers, $member));
+            $stmt = $db->prepare("SELECT id FROM members2 WHERE login = ?");
+            $stmt->execute(array($member));
+            $member_id = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $powers = $db->prepare("DELETE FROM supermembers WHERE member_id = ?");
+            $powers->execute(array($member_id['id']));
+
+            foreach ($superpowers as $value) {
+                $stmt = $db->prepare("SELECT id from superpowers3 WHERE name = ?");
+                $stmt->execute(array($value));
+                $power_id = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $powers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
+                $powers->execute(array($power_id['id'], $member_id['id']));
+            }
         } catch (PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();
@@ -225,9 +238,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         try {
             $stmt = $db->prepare("INSERT INTO members2 SET login = ?, pass = ?, name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ?");
             $stmt->execute(array($login, $hash, $name, $email, $date, $gender, $limbs, $bio, $policy));
+            $member_id = $db->lastInsertId();
+            foreach ($superpowers as $value) {
+                $stmt = $db->prepare("SELECT id from superpowers3 WHERE name = ?");
+                $stmt->execute(array($value));
+                $power_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $superpowers = $db->prepare("INSERT INTO superpowers2 SET powers = ?, user_login = ? ");
-            $superpowers->execute(array($powers, $login));
+                $powers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
+                $powers->execute(array($power_id['id'], $member_id));
+            }
         } catch (PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();
