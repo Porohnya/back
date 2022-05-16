@@ -154,7 +154,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
 </head>
 
 <body>
-    <table class="table table-dark table-hover">
+    <table class="table table-hover">
         <tr>
             <th scope="col">Название силы</th>
             <th scope="col">Число обладателей</th>
@@ -164,8 +164,8 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
             foreach ($powersCount as $value) {
         ?>
                 <tr scope="row">
-                    <td><?php echo $value['powers'] ?></td>
-                    <td><?php echo $value['owners'] ?></td>
+                    <td><?php echo $value['name'] ?></td>
+                    <td><?php echo $value['amount'] ?></td>
                 </tr>
         <?php }
         } ?>
