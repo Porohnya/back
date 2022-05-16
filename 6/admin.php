@@ -176,8 +176,8 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
             <th scope="col">Имя</th>
             <th scope="col">Email</th>
             <th scope="col">Дата рождения</th>
-            <th scope="col">Пол</th>
             <th scope="col">Конечности</th>
+            <th scope="col">Пол</th>
             <th scope="col">Суперспособности</th>
             <th scope="col">Биография</th>
         </tr>
