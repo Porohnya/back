@@ -212,16 +212,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt->execute(array($member));
             $member_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $powers = $db->prepare("DELETE FROM supermembers WHERE member_id = ?");
-            $powers->execute(array($member_id['id']));
+            $superpowers = $db->prepare("DELETE FROM supermembers WHERE member_id = ?");
+            $superpowers->execute(array($member_id['id']));
 
-            foreach ($superpowers as $value) {
+            foreach ($powers as $value) {
                 $stmt = $db->prepare("SELECT id from superpowers3 WHERE name = ?");
                 $stmt->execute(array($value));
                 $power_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $powers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
-                $powers->execute(array($power_id['id'], $member_id['id']));
+                $superpowers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
+                $superpowers->execute(array($power_id['id'], $member_id['id']));
             }
         } catch (PDOException $e) {
             print('Error : ' . $e->getMessage());
@@ -239,13 +239,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt = $db->prepare("INSERT INTO members2 SET login = ?, pass = ?, name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ?");
             $stmt->execute(array($login, $hash, $name, $email, $date, $gender, $limbs, $bio, $policy));
             $member_id = $db->lastInsertId();
-            foreach ($superpowers as $value) {
+            foreach ($powers as $value) {
                 $stmt = $db->prepare("SELECT id from superpowers3 WHERE name = ?");
                 $stmt->execute(array($value));
                 $power_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $powers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
-                $powers->execute(array($power_id['id'], $member_id));
+                $superpowers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
+                $superpowers->execute(array($power_id['id'], $member_id));
             }
         } catch (PDOException $e) {
             print('Error : ' . $e->getMessage());
