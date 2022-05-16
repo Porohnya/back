@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $db->prepare("DELETE FROM members2 WHERE login = ?");
             $stmt->execute(array($_POST['delete']));
 
-            $powers = $db->prepare("DELETE FROM superpowers2 where user_login = ?");
-            $powers->execute(array($_POST['delete']));
-            header('Location: ?delete_error=0');
+            $stmt = $db->prepare("DELETE FROM supermembers where member_id = ?");
+            $stmt->execute(array($_COOKIE['member_id']));
+            header('Location: ?delete=1');
         }
     } else if (!empty($_POST['edit'])) {
         $user = 'u47526';
@@ -37,12 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $values['bio'] = $result['bio'];
         $values['policy'] = $result['policy'];
 
-        setcookie('user_id', $member_id, time() + 12 * 30 * 24 * 60 * 60);
+        setcookie('member_id', $member_id, time() + 12 * 30 * 24 * 60 * 60);
 
-        $powers = $db->prepare("SELECT * FROM superpowers2 WHERE user_login = ?");
-        $powers->execute(array($result['login']));
-        $result = $powers->fetch(PDO::FETCH_ASSOC);
-        $values['powers'] = $result['powers'];
+        $powers = $db->prepare("SELECT distinct name from supermembers join superpowers3 pow on power_id = pow.id where member_id = ?");
+        $powers->execute(array($member_id));
+        $result = $powers->fetchAll(PDO::FETCH_ASSOC);
+        $str = "";
+        foreach ($result as $power) {
+            $str .= $power['name'] . ',';
+        }
+        $values['superpowers'] = $str;
     } else {
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -51,25 +55,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $limbs = $_POST['limbs'];
         $bio = $_POST['bio'];
         $policy = $_POST['policy'];
-        $select = implode(',', $_POST['powers']);
+        $select = $_POST['powers'];
         $user = 'u47526';
         $pass = '3997705';
         $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
-        $member_id = $_COOKIE['user_id'];
+        $member_id = $_COOKIE['member_id'];
 
         try {
             $stmt = $db->prepare("SELECT login FROM members2 WHERE id = ?");
             $stmt->execute(array($member_id));
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            setcookie('login_value', $result['login'], time() + 12 * 30 * 24 * 60 * 60);
-
             $stmt = $db->prepare("UPDATE members2 SET name = ?, email = ?, date = ?, gender = ?, limbs = ?, bio = ?, policy = ? WHERE login = ?");
             $stmt->execute(array($name, $email, $date, $gender, $limbs, $bio, $policy, $result['login']));
 
-            $superpowers = $db->prepare("UPDATE superpowers2 SET powers = ? WHERE user_login = ? ");
-            $superpowers->execute(array($select, $result['login']));
+            $superpowers = $db->prepare("DELETE FROM supermembers WHERE member_id = ?");
+            $superpowers->execute(array($member_id));
+
+            foreach ($select as $value) {
+                $stmt = $db->prepare("SELECT id from superpowers3 WHERE name = ?");
+                $stmt->execute(array($value));
+                $power_id = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $superpowers = $db->prepare("INSERT INTO supermembers SET power_id = ?, member_id = ? ");
+                $superpowers->execute(array($power_id['id'], $member_id));
+            }
         } catch (PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();
@@ -107,7 +118,7 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
     $stmt->execute([]);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $db->prepare("SELECT powers, COUNT(*) as owners FROM superpowers2 GROUP BY powers");
+    $stmt = $db->prepare("SELECT pow.name AS name, count(*) AS amount FROM supermembers JOIN superpowers3 pow ON power_id = pow.id GROUP BY power_id");
     $stmt->execute();
     $powersCount = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
@@ -129,108 +140,90 @@ if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
         body {
             padding: 12px;
             display: flex;
-            jalign-items: flex-start;
+            align-items: flex-start;
             justify-content: space-around;
             flex-direction: column;
-            background: #fff!important;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        table td {
-            border: 2px solid #E3E6EC;
-            border-collapse: collapse;
-        }
-
-        td,
-        th {
-            font-size: 13px;
-            padding: 0px 8px;
+            background: #fff !important;
         }
 
         table th {
-            font-size: 15px;
             color: #fff;
             background: linear-gradient(90deg, #2da3a1, #a0befc);
-            height: 30px;
         }
     </style>
 </head>
 
 <body>
-    <div class="tables-block">
-        <table>
-            <tr>
-                <th>Название силы</th>
-                <th>Число обладателей</th>
-            </tr>
-            <?php
-            if (!empty($powersCount)) {
-                foreach ($powersCount as $value) {
-            ?>
-                    <tr>
-                        <td><?php echo $value['powers'] ?></td>
-                        <td><?php echo $value['owners'] ?></td>
-                    </tr>
-            <?php }
-            } ?>
-        </table>
-    </div>
-    <div class="records-list">
-        <table>
-            <tr>
-                <th>Имя</th>
-                <th>Email</th>
-                <th>Дата рождения</th>
-                <th>Пол</th>
-                <th>Конечности</th>
-                <th>Суперспособности</th>
-                <th>Биография</th>
-            </tr>
-            <?php
-            if (!empty($result)) {
-                foreach ($result as $value) {
-            ?>
-                    <tr>
-                        <td><?php echo $value['name'] ?></td>
-                        <td><?php echo $value['email'] ?></td>
-                        <td><?php echo $value['date'] ?></td>
-                        <td><?php echo $value['limbs'] ?></td>
-                        <td><?php echo $value['gender'] ?></td>
-                        <td>
-                            <?php
-                            $powers = $db->prepare("SELECT * FROM superpowers2 where user_login = ?");
-                            $powers->execute(array($value['login']));
-                            $superpowers = $powers->fetch(PDO::FETCH_ASSOC);
-                            echo $superpowers['powers'];
-                            ?>
-                        </td>
-                        <td id="bio">
-                            <?php echo $value['bio'] ?>
-                        </td>
-                        <td class="edit-buttons">
-                            <form action="" method="post">
-                                <input value="<?php echo $value['id'] ?>" name="edit" type="hidden" />
-                                <button id="edit">Edit</button>
-                            </form>
-                        </td>
-                        <td class="edit-buttons">
-                            <form action="" method="post">
-                                <input value="<?php echo $value['login'] ?>" name="delete" type="hidden" />
-                                <button id="delete">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-            <?php
-                }
-            } else {
-                echo "Записи не найдены";
+    <table class="table table-dark table-hover">
+        <tr>
+            <th scope="col">Название силы</th>
+            <th scope="col">Число обладателей</th>
+        </tr>
+        <?php
+        if (!empty($powersCount)) {
+            foreach ($powersCount as $value) {
+        ?>
+                <tr scope="row">
+                    <td><?php echo $value['powers'] ?></td>
+                    <td><?php echo $value['owners'] ?></td>
+                </tr>
+        <?php }
+        } ?>
+    </table>
+
+    <table class="table table-dark table-hover">
+        <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Email</th>
+            <th scope="col">Дата рождения</th>
+            <th scope="col">Пол</th>
+            <th scope="col">Конечности</th>
+            <th scope="col">Суперспособности</th>
+            <th scope="col">Биография</th>
+        </tr>
+        <?php
+        if (!empty($result)) {
+            foreach ($result as $value) {
+        ?>
+                <tr scope="row">
+                    <td><?php echo $value['name'] ?></td>
+                    <td><?php echo $value['email'] ?></td>
+                    <td><?php echo $value['date'] ?></td>
+                    <td><?php echo $value['limbs'] ?></td>
+                    <td><?php echo $value['gender'] ?></td>
+                    <td>
+                        <?php
+                        $powers = $db->prepare("SELECT distinct name from supermembers join superpowers3 pow on power_id = pow.id where member_id = ?");
+                        $powers->execute(array($value['id']));
+                        $superpowers = $powers->fetchAll(PDO::FETCH_ASSOC);
+                        $str = "";
+                        foreach ($superpowers as $power) {
+                            $str .= $power['name'] . ';';
+                        }
+                        echo $str;
+                        ?>
+                    </td>
+                    <td><?php echo $value['bio'] ?></td>
+                    <td>
+                        <form action="" method="post">
+                            <input value="<?php echo $value['id'] ?>" name="edit" type="hidden" />
+                            <button id="edit">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="" method="post">
+                            <input value="<?php echo $value['login'] ?>" name="delete" type="hidden" />
+                            <button id="delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+        <?php
             }
-            ?>
-        </table>
-    </div>
+        } else {
+            echo "Записи не найдены";
+        }
+        ?>
+    </table>
     <?php if (!empty($_POST['edit'])) {
         include('adminchange.php');
     } ?>
