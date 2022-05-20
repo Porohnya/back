@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $user = 'u47526';
             $pass = '3997705';
             $member = $_SESSION['login'];
-            $db = new PDO('mysql:host=localhost;dbname=u47529', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+            $db = new PDO('mysql:host=localhost;dbname=u47526', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
             $stmt = $db->prepare("SELECT * FROM members2 WHERE login = ?");
             $stmt->execute(array($member));
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
