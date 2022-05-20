@@ -12,11 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (empty($result)) {
             print('<p>Ошибка при удалении данных</p>');
         } else {
+            $user_id = $result['id'];
             $stmt = $db->prepare("DELETE FROM members2 WHERE login = ?");
             $stmt->execute(array($_POST['delete']));
 
             $stmt = $db->prepare("DELETE FROM supermembers where member_id = ?");
-            $stmt->execute(array($_COOKIE['member_id']));
+            $stmt->execute(array($user_id));
             header('Location: ?delete=1');
         }
     } else if (!empty($_POST['edit'])) {
